@@ -2,7 +2,7 @@
 
 const dynamodb = require('../libs/dynamodb');
 
-module.exports.get = async (event, context) => {
+module.exports.get = async (event, context) => {  // eslint-disable-line no-unused-vars
     // Authenticated user.
     const user = event.requestContext.authorizer.principalId;
     // Admin user can read other users' details. Otherwise, the user can get their own data.

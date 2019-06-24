@@ -13,7 +13,7 @@ const schema = Joi.object().keys({
     role: Joi.string().min(3).max(8).required()
 });
 
-module.exports.create = async (event, context) => {
+module.exports.create = async (event, context) => { // eslint-disable-line no-unused-vars
     const timestamp = new Date().getTime();
     const data = JSON.parse(event.body);
 
@@ -40,7 +40,7 @@ module.exports.create = async (event, context) => {
     };
 
     try {
-        const result = await dynamodb.put(params).promise();
+        await dynamodb.put(params).promise();
         return {
             statusCode: 200,
             body: JSON.stringify(params.Item),

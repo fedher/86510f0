@@ -2,7 +2,7 @@
 
 const dynamodb = require('../libs/dynamodb');
 
-module.exports.list = async (event, context) => {
+module.exports.list = async (event, context) => {  // eslint-disable-line no-unused-vars
     // Authenticated user.
     const user = event.requestContext.authorizer.principalId;
     if (user.role !== 'admin') {

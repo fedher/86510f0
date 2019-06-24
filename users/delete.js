@@ -2,7 +2,7 @@
 
 const dynamodb = require('../libs/dynamodb');
 
-module.exports.delete = async (event, context) => {
+module.exports.delete = async (event, context) => {  // eslint-disable-line no-unused-vars
     // Authenticated user.
     const user = event.requestContext.authorizer.principalId;
     // As admin user, I can delete any user from the db. The employee user only can remove their personal data.
@@ -16,7 +16,7 @@ module.exports.delete = async (event, context) => {
     }
 
     try {
-        const result = await deleteUser(id);
+        await deleteUser(id);
         return {
             statusCode: 200,
             body: JSON.stringify({}),

@@ -10,7 +10,7 @@ const schema = Joi.object().keys({
     email: Joi.string().email({ minDomainAtoms: 2 })
 });
 
-module.exports.update = async (event, context) => {
+module.exports.update = async (event, context) => {  // eslint-disable-line no-unused-vars
     // Authenticated user.
     const user = event.requestContext.authorizer.principalId;
     // As admin user, I can update any user data from the db. The employee user can only update their personal data.
