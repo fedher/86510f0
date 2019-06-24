@@ -32,7 +32,7 @@ module.exports.auth = async (event, context) => { // eslint-disable-line no-unus
 
     // Allows the request.
     return {
-        principalId: user.role,
+        principalId: user,
         policyDocument: {
             Version: '2012-10-17',
             Statement: [
