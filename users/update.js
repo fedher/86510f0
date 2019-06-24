@@ -1,20 +1,28 @@
 'use strict';
 
+const Joi = require('joi');
+
 const dynamodb = require('./dynamodb');
 
-module.exports.update = (event, context, callback) => {
+const schema = Joi.object().keys({
+    name: Joi.string().min(3).max(30),
+    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+    email: Joi.string().email({ minDomainAtoms: 2 })
+});
+
+module.exports.update = async (event, context) => {
     const timestamp = new Date().getTime();
     const data = JSON.parse(event.body);
 
     // validation
-    if (typeof data.text !== 'string' || typeof data.checked !== 'boolean') {
-        console.error('Validation Failed');
-        callback(null, {
+    const validation = Joi.validate(data, schema);
+    if (validation.error) {
+        console.error('Validation Failed: ', validation);
+        return {
             statusCode: 400,
             headers: { 'Content-Type': 'text/plain' },
-            body: 'Couldn\'t update the todo item.',
-        });
-        return;
+            body: 'Couldn\'t update the user.',
+        };
     }
 
     const params = {
@@ -23,35 +31,30 @@ module.exports.update = (event, context, callback) => {
             id: event.pathParameters.id,
         },
         ExpressionAttributeNames: {
-            '#todo_text': 'text',
+            '#user_name': 'name',
         },
         ExpressionAttributeValues: {
-            ':text': data.text,
-            ':checked': data.checked,
+            ':name': data.name,
+            ':email': data.email,
+            ':password': data.password,
             ':updatedAt': timestamp,
         },
-        UpdateExpression: 'SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt',
+        UpdateExpression: 'SET #user_name = :name, email = :email, password = :password, updatedAt = :updatedAt',
         ReturnValues: 'ALL_NEW',
     };
 
-    // update the todo in the database
-    dynamodb.update(params, (error, result) => {
-    // handle potential errors
-        if (error) {
-            console.error(error);
-            callback(null, {
-                statusCode: error.statusCode || 501,
-                headers: { 'Content-Type': 'text/plain' },
-                body: 'Couldn\'t update the todo item.',
-            });
-            return;
-        }
-
-        // create a response
-        const response = {
+    try {
+        const result = dynamodb.update(params).promise();
+        return {
             statusCode: 200,
             body: JSON.stringify(result.Attributes),
         };
-        callback(null, response);
-    });
+    } catch (error) {
+        console.error(error);
+        return {
+            statusCode: error.statusCode || 501,
+            headers: { 'Content-Type': 'text/plain' },
+            body: 'Couldn\'t update the user.',
+        };
+    }
 };

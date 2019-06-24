@@ -11,10 +11,8 @@ module.exports.get = async (event, context) => {
         },
     };
 
-    // fetch todo from the database
     try {
         const result = await dynamodb.get(params).promise();
-        // create a response
         return {
             statusCode: 200,
             body: JSON.stringify(result.Item),
@@ -29,9 +27,8 @@ module.exports.get = async (event, context) => {
         };
     }
 
-    // create a response
     return {
         statusCode: 400,
-    // body: JSON.stringify(result.Item),
+        body: JSON.stringify({})
     };
 };
