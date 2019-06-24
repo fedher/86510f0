@@ -11,7 +11,18 @@ const schema = Joi.object().keys({
 });
 
 module.exports.update = async (event, context) => {
-    const timestamp = new Date().getTime();
+    // Authenticated user.
+    const user = event.requestContext.authorizer.principalId;
+    // As admin user, I can update any user data from the db. The employee user can only update their personal data.
+    let id = user.role === 'admin' ? event.pathParameters.id : user.id;
+
+    if (!id) {
+        return {
+            statusCode: 400,
+            body: 'Missing id parameter'
+        };
+    }
+
     const data = JSON.parse(event.body);
 
     // validation
@@ -25,26 +36,8 @@ module.exports.update = async (event, context) => {
         };
     }
 
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE,
-        Key: {
-            id: event.pathParameters.id,
-        },
-        ExpressionAttributeNames: {
-            '#user_name': 'name',
-        },
-        ExpressionAttributeValues: {
-            ':name': data.name,
-            ':email': data.email,
-            ':password': data.password,
-            ':updatedAt': timestamp,
-        },
-        UpdateExpression: 'SET #user_name = :name, email = :email, password = :password, updatedAt = :updatedAt',
-        ReturnValues: 'ALL_NEW',
-    };
-
     try {
-        const result = dynamodb.update(params).promise();
+        const result = await updateUser(id, data);
         return {
             statusCode: 200,
             body: JSON.stringify(result.Attributes),
@@ -58,3 +51,26 @@ module.exports.update = async (event, context) => {
         };
     }
 };
+
+
+async function updateUser(id, data) {
+    const timestamp = new Date().getTime();
+    const params = {
+        TableName: process.env.DYNAMODB_TABLE,
+        Key: {
+            id,
+        },
+        ExpressionAttributeNames: {
+            '#user_name': 'name',
+        },
+        ExpressionAttributeValues: {
+            ':name': data.name,
+            ':email': data.email,
+            ':password': data.password,
+            ':updatedAt': timestamp,
+        },
+        UpdateExpression: 'SET #user_name = :name, email = :email, password = :password, updatedAt = :updatedAt',
+        ReturnValues: 'ALL_NEW',
+    };
+    return dynamodb.update(params).promise();
+}
