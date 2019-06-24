@@ -1,0 +1,42 @@
+{
+    "Table": {
+        "TableName": "ma-user",
+        "KeySchema": [
+            {
+                "AttributeName": "id",
+                "KeyType": "HASH"
+            }
+            /* ,
+            {
+                "AttributeName": "name",
+                "KeyType": "RANGE"
+            } */
+        ],
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "id",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "email",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "name",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "password",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "role",
+                "AttributeType": "S"
+            }
+        ],
+        "ProvisionedThroughput": {
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+        }
+    }
+}
