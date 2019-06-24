@@ -17,7 +17,7 @@ module.exports.list = async (event, context) => {  // eslint-disable-line no-unu
         TableName: process.env.DYNAMODB_TABLE,
     };
 
-    // fetch all todos from the database
+    // fetch all users from the database
     try {
         const result = await dynamodb.scan(params).promise();
         // create a response
@@ -26,7 +26,7 @@ module.exports.list = async (event, context) => {  // eslint-disable-line no-unu
             body: JSON.stringify(result.Items),
         };
     } catch (error) {
-    // handle potential errors
+        // handle potential errors
         logger.log('error', error);
         return {
             statusCode: error.statusCode || 501,
