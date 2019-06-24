@@ -3,20 +3,25 @@
 const dynamodb = require('../libs/dynamodb');
 
 module.exports.delete = async (event, context) => {
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE,
-        Key: {
-            id: event.pathParameters.id,
-        },
-    };
+    // Authenticated user.
+    const user = event.requestContext.authorizer.principalId;
+    // As admin user, I can delete any user from the db. The employee user only can remove their personal data.
+    let id = user.role === 'admin' ? event.pathParameters.id : user.id;
 
-    // delete the todo from the database
+    if (!id) {
+        return {
+            statusCode: 400,
+            body: 'Missing id parameter'
+        };
+    }
+
     try {
-        const result = await dynamodb.delete(params).promise();
+        const result = await deleteUser(id);
         return {
             statusCode: 200,
             body: JSON.stringify({}),
         };
+
     } catch (error) {
         console.error(error);
         return {
@@ -26,3 +31,13 @@ module.exports.delete = async (event, context) => {
         };
     }
 };
+
+async function deleteUser(id) {
+    const params = {
+        TableName: process.env.DYNAMODB_TABLE,
+        Key: {
+            id,
+        },
+    };
+    return dynamodb.delete(params).promise();
+}
