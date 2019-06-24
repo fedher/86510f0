@@ -3,6 +3,15 @@
 const dynamodb = require('../libs/dynamodb');
 
 module.exports.list = async (event, context) => {
+    // Authenticated user.
+    const user = event.requestContext.authorizer.principalId;
+    if (user.role !== 'admin') {
+        return {
+            statusCode: 403,
+            body: 'Not authorized to list users data'
+        };
+    }
+
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
     };

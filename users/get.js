@@ -4,7 +4,7 @@ const dynamodb = require('../libs/dynamodb');
 
 module.exports.get = async (event, context) => {
     // Authenticated user.
-    const user = event.requestContext.authorizer;
+    const user = event.requestContext.authorizer.principalId;
     // Admin user can read other users' details. Otherwise, the user can get their own data.
     let id = user.role === 'admin' ? event.pathParameters.id : user.id;
 
