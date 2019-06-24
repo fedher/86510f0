@@ -81,6 +81,18 @@ describe('Admin Tests:', () => {
         }
     });
 
+    it('should get a list of employees as admin', async () => {
+        try {
+            const { body, status } = await rest.req('get', `${url}`, apiKey);
+
+            assert.equal(status, 200, 'status should be 200');
+            assert.equal(body instanceof Array, true);
+
+        } catch (error) {
+            assert.fail();
+        }
+    });
+
     it('should delete an employee user as admin', async () => {
         try {
             const { status } = await rest.req('delete', `${url}/${employeeId}`, apiKey);
@@ -102,4 +114,5 @@ describe('Admin Tests:', () => {
             assert.fail();
         }
     });
+
 });
