@@ -1,10 +1,10 @@
 # Requirements
 
-`$ serverless dynamodb install`
+`$ sls dynamodb install`
 
-`$ serverless offline start`
+`$ sls offline start`
 
-`$ serverless dynamodb migrate`
+`$ sls dynamodb migrate`
 
 # To run the tests
 

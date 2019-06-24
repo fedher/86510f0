@@ -3,7 +3,7 @@
   "version": "0.1.6",
   "author": "J. Federico Hernandez <fede.hernandez@gmail.com>",
   "scripts": {
-    "start": "serverless offline start",
+    "start": "sls offline start",
     "test": "mocha tests"
   },
   "dependencies": {
