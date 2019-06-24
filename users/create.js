@@ -9,7 +9,8 @@ const dynamodb = require('./dynamodb');
 const schema = Joi.object().keys({
     name: Joi.string().min(3).max(30).required(),
     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
-    email: Joi.string().email({ minDomainAtoms: 2 })
+    email: Joi.string().email({ minDomainAtoms: 2 }),
+    role: Joi.string().min(3).max(8).required()
 });
 
 module.exports.create = async (event, context) => {
@@ -32,6 +33,7 @@ module.exports.create = async (event, context) => {
             id: uuid.v1(),
             name: data.name,
             email: data.email,
+            role: data.role,
             createdAt: timestamp,
             updatedAt: timestamp,
         },
