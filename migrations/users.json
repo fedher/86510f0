@@ -6,11 +6,6 @@
                 "AttributeName": "id",
                 "KeyType": "HASH"
             }
-            /* ,
-            {
-                "AttributeName": "name",
-                "KeyType": "RANGE"
-            } */
         ],
         "AttributeDefinitions": [
             {
@@ -37,6 +32,17 @@
         "ProvisionedThroughput": {
             "ReadCapacityUnits": 1,
             "WriteCapacityUnits": 1
-        }
+        },
+        "GlobalSecondaryIndexes": [
+            {
+                "IndexName": "email_index",
+                "KeySchema": [
+                    {
+                        "AttributeName": "email",
+                        "KeyType": "HASH",
+                    }
+                ]
+            }
+        ]
     }
 }
