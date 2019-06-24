@@ -1,6 +1,7 @@
 'use strict';
 
 const dynamodb = require('./dynamodb');
+const logger = require('./logger');
 
 module.exports.auth = async (event, context) => { // eslint-disable-line no-unused-vars
     const authHeader = event.headers.Authorization;
@@ -26,7 +27,7 @@ module.exports.auth = async (event, context) => { // eslint-disable-line no-unus
         user = result.Items[0];
 
     } catch (error) {
-        console.log('-- ERROR: ', error);
+        logger.log('error', error);
         return 'Unauthorized';
     }
 
@@ -46,7 +47,8 @@ module.exports.auth = async (event, context) => { // eslint-disable-line no-unus
     };
 };
 
-async function getUser(email, password) {
+async function getUser(email, password) { // eslint-disable-line no-unused-vars
+    // @@ FIXME: retrieve the user by email and password (auth token).
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
         IndexName: 'email_index',

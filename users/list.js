@@ -1,6 +1,7 @@
 'use strict';
 
 const dynamodb = require('../libs/dynamodb');
+const logger = require('../libs/logger');
 
 module.exports.list = async (event, context) => {  // eslint-disable-line no-unused-vars
     // Authenticated user.
@@ -26,7 +27,7 @@ module.exports.list = async (event, context) => {  // eslint-disable-line no-unu
         };
     } catch (error) {
     // handle potential errors
-        console.error(error);
+        logger.log('error', error);
         return {
             statusCode: error.statusCode || 501,
             headers: { 'Content-Type': 'text/plain' },

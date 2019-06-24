@@ -3,6 +3,7 @@
 const Joi = require('joi');
 
 const dynamodb = require('../libs/dynamodb');
+const logger = require('../libs/logger');
 
 const schema = Joi.object().keys({
     name: Joi.string().min(3).max(30),
@@ -35,7 +36,7 @@ module.exports.update = async (event, context) => {  // eslint-disable-line no-u
     // validation
     const validation = Joi.validate(data, schema);
     if (validation.error) {
-        console.error('Validation Failed: ', validation);
+        logger.log('error', 'Validation Failed: ', validation);
         return {
             statusCode: 400,
             headers: { 'Content-Type': 'text/plain' },
@@ -50,7 +51,7 @@ module.exports.update = async (event, context) => {  // eslint-disable-line no-u
             body: JSON.stringify(result.Attributes),
         };
     } catch (error) {
-        console.error(error);
+        logger.log('error', error);
         return {
             statusCode: error.statusCode || 501,
             headers: { 'Content-Type': 'text/plain' },
