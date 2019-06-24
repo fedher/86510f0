@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 
 const rest = require('./libs/rest');
-const apiKey = require('./keys/emplyee');
+const apiKey = require('./keys/employee');
 
 const url = 'http://localhost:3000/users';
 
