@@ -5,24 +5,24 @@ const dynamodb = require('./dynamodb');
 module.exports.auth = async (event, context) => { // eslint-disable-line no-unused-vars
     const authHeader = event.headers.Authorization;
 
-    // console.log('-- AUTHORIZER! ', authHeader);
     if (!authHeader) {
         return 'Unauthorized';
     };
 
+    // Split the Basic HTTP Authentication Header to get the username and password.
     const encodedCreds = authHeader.split(' ')[1];
     const plainCreds = (new Buffer(encodedCreds, 'base64')).toString().split(':');
     const username = plainCreds[0];
     const password = plainCreds[1];
 
-    let user = { role: 'employee' };
+    let user = { role: 'employee' }; // role by default
     try {
         const result = await getUser(username, password);
         // console.log('-- ITEMS: ', result.Items);
         if (result.Items.length === 0) {
             return 'Unauthorized';
         }
-
+        // Sets the authenticated user.
         user = result.Items[0];
 
     } catch (error) {
@@ -30,7 +30,7 @@ module.exports.auth = async (event, context) => { // eslint-disable-line no-unus
         return 'Unauthorized';
     }
 
-    console.log('-- USER: ', user);
+    // Allows the request.
     return {
         principalId: user.role,
         policyDocument: {
