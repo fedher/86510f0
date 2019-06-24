@@ -59,7 +59,7 @@ async function getUser(email, password) {
         ExpressionAttributeValues: {
             ':email': email
         },
-        ProjectionExpression: 'email, #role, #name'
+        ProjectionExpression: 'id, email, #role, #name'
     };
     return dynamodb.query(params).promise();
 }
