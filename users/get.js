@@ -3,16 +3,24 @@
 const dynamodb = require('../libs/dynamodb');
 
 module.exports.get = async (event, context) => {
-    console.log('--- id: ', event.pathParameters.id);
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE,
-        Key: {
-            id: event.pathParameters.id,
-        },
-    };
+    const user = event.requestContext.authorizer;
+    let id = user.role === 'employee' ? user.id : event.pathParameters.id;
+
+    if (!id) {
+        return {
+            statusCode: 400,
+            body: 'Missing id parameter'
+        };
+    }
 
     try {
-        const result = await dynamodb.get(params).promise();
+        const result = await getUser(id);
+        if (!result.Item) {
+            return {
+                statusCode: 404,
+                body: 'User not found'
+            };
+        }
         return {
             statusCode: 200,
             body: JSON.stringify(result.Item),
@@ -26,9 +34,14 @@ module.exports.get = async (event, context) => {
             body: 'Couldn\'t fetch the todo item.',
         };
     }
-
-    return {
-        statusCode: 400,
-        body: JSON.stringify({})
-    };
 };
+
+async function getUser(id) {
+    const params = {
+        TableName: process.env.DYNAMODB_TABLE,
+        Key: {
+            id,
+        },
+    };
+    return dynamodb.get(params).promise();
+}
