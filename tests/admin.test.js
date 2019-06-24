@@ -8,7 +8,7 @@ const url = 'http://localhost:3000/users';
 let adminId;
 let employeeId;
 
-describe('API Tests:', () => {
+describe('Admin Tests:', () => {
 
     it('should create an admin', async () => {
         try {
@@ -46,12 +46,6 @@ describe('API Tests:', () => {
 
         } catch (err) {
             assert.fail();
-            // const { code, type, msg } = err.response.body;
-            // console.log('RESULT: ', code, type, msg);
-            // expect(err.status).to.equal(404);
-            // expect(code).to.equal(11);
-            // expect(type).to.equal('api_error');
-            // expect(msg).to.equal('route_not_found');
         }
     });
 
