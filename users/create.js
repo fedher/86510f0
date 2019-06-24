@@ -1,9 +1,54 @@
 'use strict';
 
+const uuid = require('uuid');
+const Joi = require('joi');
+
+const dynamodb = require('./dynamodb');
+
+
+const schema = Joi.object().keys({
+    name: Joi.string().min(3).max(30).required(),
+    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/),
+    email: Joi.string().email({ minDomainAtoms: 2 })
+});
+
 module.exports.create = async (event, context) => {
-    // create a response
-    return {
-        statusCode: 200,
-        body: 'test',
+    const timestamp = new Date().getTime();
+    const data = JSON.parse(event.body);
+
+    const validation = Joi.validate(data, schema);
+    if (validation.error) {
+        console.error('Validation Failed: ', validation);
+        return {
+            statusCode: 400,
+            headers: { 'Content-Type': 'text/plain' },
+            body: 'Couldn\'t create the user.',
+        };
+    }
+
+    const params = {
+        TableName: process.env.DYNAMODB_TABLE,
+        Item: {
+            id: uuid.v1(),
+            name: data.name,
+            email: data.email,
+            createdAt: timestamp,
+            updatedAt: timestamp,
+        },
     };
+
+    try {
+        const result = await dynamodb.put(params).promise();
+        return {
+            statusCode: 200,
+            body: JSON.stringify(params.Item),
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            statusCode: error.statusCode || 501,
+            headers: { 'Content-Type': 'text/plain' },
+            body: 'Couldn\'t create the todo item.',
+        };
+    }
 };
