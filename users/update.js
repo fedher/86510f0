@@ -2,7 +2,7 @@
 
 const Joi = require('joi');
 
-const dynamodb = require('./dynamodb');
+const dynamodb = require('../libs/dynamodb');
 
 const schema = Joi.object().keys({
     name: Joi.string().min(3).max(30),

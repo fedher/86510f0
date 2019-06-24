@@ -1,6 +1,6 @@
 'use strict';
 
-const dynamodb = require('./dynamodb');
+const dynamodb = require('../libs/dynamodb');
 
 module.exports.get = async (event, context) => {
     console.log('--- id: ', event.pathParameters.id);

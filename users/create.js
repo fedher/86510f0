@@ -3,7 +3,7 @@
 const uuid = require('uuid');
 const Joi = require('joi');
 
-const dynamodb = require('./dynamodb');
+const dynamodb = require('../libs/dynamodb');
 
 
 const schema = Joi.object().keys({

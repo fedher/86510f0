@@ -80,7 +80,7 @@ functions:
           cors: true
 
   authorizer:
-      handler: authorizer.auth
+      handler: libs/authorizer.auth
 
 resources:
   Resources:
@@ -94,15 +94,6 @@ resources:
             AttributeType: S
           -
             AttributeName: email
-            AttributeType: S
-          -
-            AttributeName: role
-            AttributeType: S
-          -
-            AttributeName: name
-            AttributeType: S
-          -
-            AttributeName: password
             AttributeType: S
         KeySchema:
           -

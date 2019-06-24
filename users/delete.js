@@ -1,6 +1,6 @@
 'use strict';
 
-const dynamodb = require('./dynamodb');
+const dynamodb = require('../libs/dynamodb');
 
 module.exports.delete = async (event, context) => {
     const params = {
