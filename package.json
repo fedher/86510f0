@@ -1,6 +1,6 @@
 {
   "name": "rest-api",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "J. Federico Hernandez <fede.hernandez@gmail.com>",
   "scripts": {
     "test": "mocha tests"
