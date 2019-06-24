@@ -8,6 +8,8 @@
 
 # To run the tests
 
-`$ serverless offline start`
+`$ npm start`
+
+You should wait until serverless offline mode is listening on port 3000. Then, you can run:
 
 `$ npm test`
