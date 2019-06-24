@@ -23,6 +23,13 @@ module.exports.update = async (event, context) => {  // eslint-disable-line no-u
         };
     }
 
+    if (user.role === 'employee' && event.pathParameters.id !== user.id) {
+        return {
+            statusCode: 403,
+            body: 'Not allowed to update other user data'
+        };
+    }
+
     const data = JSON.parse(event.body);
 
     // validation

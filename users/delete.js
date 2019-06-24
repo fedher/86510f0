@@ -15,6 +15,13 @@ module.exports.delete = async (event, context) => {  // eslint-disable-line no-u
         };
     }
 
+    if (user.role === 'employee' && event.pathParameters.id !== user.id) {
+        return {
+            statusCode: 403,
+            body: 'Not allowed to delete other user data'
+        };
+    }
+
     try {
         await deleteUser(id);
         return {

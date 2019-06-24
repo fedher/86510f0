@@ -15,6 +15,13 @@ module.exports.get = async (event, context) => {  // eslint-disable-line no-unus
         };
     }
 
+    if (user.role === 'employee' && event.pathParameters.id !== user.id) {
+        return {
+            statusCode: 403,
+            body: 'Not allowed to get other user data'
+        };
+    }
+
     try {
         const result = await getUser(id);
         if (!result.Item) {
@@ -33,7 +40,7 @@ module.exports.get = async (event, context) => {  // eslint-disable-line no-unus
         return {
             statusCode: error.statusCode || 501,
             headers: { 'Content-Type': 'text/plain' },
-            body: 'Couldn\'t fetch the todo item.',
+            body: 'Couldn\'t get the user data.',
         };
     }
 };
